@@ -1,0 +1,34 @@
+# =========================================================
+# Ignorar carpetas de compilación (¡LO MÁS IMPORTANTE!)
+# =========================================================
+[Bb]in/
+[Oo]bj/
+
+# =========================================================
+# Ignorar archivos temporales y configuraciones de usuario de Visual Studio
+# =========================================================
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================================================
+# Ignorar paquetes descargados (NuGet los restaurará automáticamente)
+# =========================================================
+packages/
+*.nupkg
+
+# =========================================================
+# Ignorar variables de entorno o configuraciones de desarrollo
+# (Para evitar subir contraseñas o cadenas de conexión locales)
+# =========================================================
+appsettings.Development.json
+appsettings.local.json
+.env
+
+# =========================================================
+# Archivos de publicación (Cuando compilas para producción)
+# =========================================================
+Properties/PublishProfiles/*.pubxml.user
+Publish/
