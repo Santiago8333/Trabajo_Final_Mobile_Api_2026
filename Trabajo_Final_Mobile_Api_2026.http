@@ -1,0 +1,6 @@
+@Trabajo_Final_Mobile_Api_2026_HostAddress = http://localhost:5064
+
+GET {{Trabajo_Final_Mobile_Api_2026_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
