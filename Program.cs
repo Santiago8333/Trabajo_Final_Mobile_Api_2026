@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Trabajo_Final_Mobile_Api_2026.Models;
 using Trabajo_Final_Mobile_Api_2026.Repositorios;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +21,28 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
 
+var jwtSection = builder.Configuration.GetSection("Jwt");
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSection["Issuer"],
+            ValidAudience = jwtSection["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection["Key"]!))
+        };
+    });
 
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Empleado"));
+	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
+});
 
 var app = builder.Build();
 
@@ -32,6 +54,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
