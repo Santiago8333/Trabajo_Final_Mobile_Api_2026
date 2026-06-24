@@ -74,6 +74,10 @@ public class UsuarioController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostAgregarUsuario(Usuario request)
     {
+        var existente = await _repositorio.ObtenerPorEmailAsync(request.Email);
+        if (existente is not null)
+            return Conflict("El email ya esta registrado.");
+
         var salt = _configuration["Salt"] ?? "";
 
         var usuario = new Usuario
@@ -90,4 +94,12 @@ public class UsuarioController : ControllerBase
 
         return NoContent();
     }
+
+
+
+
+
+
+
+    
 }

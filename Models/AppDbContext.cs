@@ -10,6 +10,8 @@ namespace Trabajo_Final_Mobile_Api_2026.Models
         }
 
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Vehiculo> Vehiculo { get; set; }
+        public DbSet<Reparacion> Reparacion { get; set; }
 
 
     }
