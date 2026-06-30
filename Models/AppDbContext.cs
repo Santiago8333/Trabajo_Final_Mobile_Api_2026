@@ -14,6 +14,7 @@ namespace Trabajo_Final_Mobile_Api_2026.Models
         public DbSet<Reparacion> Reparacion { get; set; }
         public DbSet<Stock> Stock { get; set; }
         public DbSet<DetalleReparacion> DetalleReparacion { get; set; }
+        public DbSet<Factura> Factura {get;set;}
 
 
     }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Trabajo_Final_Mobile_Api_2026.Dtos;
 using Trabajo_Final_Mobile_Api_2026.Helpers;
 using Trabajo_Final_Mobile_Api_2026.Models;
 using Trabajo_Final_Mobile_Api_2026.Repositorios;

@@ -21,5 +21,7 @@ public class Usuario()
 
     public int Rol  { get; set; }
 
+    public DateOnly Fecha_Creacion {get;set;}
+
 
 }

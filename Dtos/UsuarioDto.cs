@@ -1,4 +1,6 @@
-namespace Trabajo_Final_Mobile_Api_2026.Models;
+using Trabajo_Final_Mobile_Api_2026.Models;
+
+namespace Trabajo_Final_Mobile_Api_2026.Dtos;
 
 public class UsuarioDto
 {
@@ -8,6 +10,7 @@ public class UsuarioDto
     public string Especializacion { get; set; } = "";
     public string Email { get; set; } = "";
     public int Rol { get; set; }
+    public DateOnly Fecha_Creacion { get; set; }
 
     public static UsuarioDto DesdeUsuario(Usuario usuario) => new()
     {
@@ -16,6 +19,7 @@ public class UsuarioDto
         Apellido = usuario.Apellido,
         Especializacion = usuario.Especializacion,
         Email = usuario.Email,
-        Rol = usuario.Rol
+        Rol = usuario.Rol,
+        Fecha_Creacion = usuario.Fecha_Creacion
     };
 }

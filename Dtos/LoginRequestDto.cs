@@ -1,4 +1,4 @@
-namespace Trabajo_Final_Mobile_Api_2026.Models;
+namespace Trabajo_Final_Mobile_Api_2026.Dtos;
 
 public class LoginRequestDto
 {
