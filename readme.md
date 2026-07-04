@@ -62,6 +62,67 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
 ---
 
+## 🔧 Stock
+
+### 🔸 Obtener Todo el Stock
+
+- **Método:** GET
+- **Ruta:** `/api/Stock`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Respuesta:** `List<Stock>` / `401 Unauthorized` sin token
+- **Descripción:** Devuelve todas las piezas registradas en stock.
+
+### 🔸 Obtener Stock por Id
+
+- **Método:** GET
+- **Ruta:** `/api/Stock/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del stock
+- **Respuesta:** `Stock` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Devuelve los datos de una pieza específica.
+
+### 🔸 Crear Stock
+
+- **Método:** POST
+- **Ruta:** `/api/Stock`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Stock` (JSON)
+  - `Nombre_Pieza`: string
+  - `Cantidad_Stock`: int
+  - `Precio_Unitario`: decimal
+  - `Fecha_Creacion`: date (`yyyy-MM-dd`)
+- **Respuesta:** `204 No Content` / `401 Unauthorized` sin token
+- **Descripción:** Registra una nueva pieza en el stock.
+
+### 🔸 Actualizar Stock
+
+- **Método:** PUT
+- **Ruta:** `/api/Stock/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del stock
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Stock` (JSON)
+  - `Nombre_Pieza`: string
+  - `Cantidad_Stock`: int
+  - `Precio_Unitario`: decimal
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Actualiza los datos de una pieza existente. No modifica `Fecha_Creacion`.
+
+### 🔸 Eliminar Stock
+
+- **Método:** DELETE
+- **Ruta:** `/api/Stock/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del stock
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Elimina una pieza del stock.
+
+---
+
 `UsuarioDto` no incluye el campo `Clave`.
 
 Para acceder a endpoints protegidos con políticas (`Administrador`, `Empleado`), se debe enviar el token obtenido en el login como header:
