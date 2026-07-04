@@ -10,4 +10,6 @@ public class Vehiculo
     public string Matricula { get; set; } = "";
 
     public string Modelo { get; set; } = "";
+
+    public DateOnly Fecha_Creacion { get; set; }
 }

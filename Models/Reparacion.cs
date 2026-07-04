@@ -22,4 +22,6 @@ public class Reparacion()
     public string Motivo_Ingreso { get; set; } = "";
 
     public decimal Costo_Mano_De_Obra { get; set; }
+
+    public DateOnly Fecha_Creacion { get; set; }
 }

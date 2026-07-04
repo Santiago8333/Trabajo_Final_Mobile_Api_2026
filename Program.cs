@@ -20,6 +20,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
+builder.Services.AddScoped<IStockRepositorio,RepositorioStock>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 

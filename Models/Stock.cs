@@ -14,4 +14,6 @@ public class Stock
     public int Cantidad_Stock { get; set; }
 
     public decimal Precio_Unitario { get; set; }
+
+    public DateOnly Fecha_Creacion { get; set; }
 }

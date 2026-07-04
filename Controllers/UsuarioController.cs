@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Trabajo_Final_Mobile_Api_2026.Dtos;
@@ -9,6 +10,7 @@ namespace Trabajo_Final_Mobile_Api_2026.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioRepositorio _repositorio;
@@ -21,6 +23,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(LoginRequestDto request)
     {
         var usuario = await _repositorio.ObtenerPorEmailAsync(request.Email);
@@ -56,6 +59,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Administrador")]
     public async Task<ActionResult<List<UsuarioDto>>> Get()
     {
         var usuarios = await _repositorio.ObtenerTodosAsync();
@@ -73,6 +77,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Administrador")]
     public async Task<IActionResult> PostAgregarUsuario(Usuario request)
     {
         var existente = await _repositorio.ObtenerPorEmailAsync(request.Email);
