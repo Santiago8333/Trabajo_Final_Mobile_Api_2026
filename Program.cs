@@ -21,6 +21,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
 builder.Services.AddScoped<IStockRepositorio,RepositorioStock>();
+builder.Services.AddScoped<IVehiculoRepositorio, RepositorioVehiculo>();
+builder.Services.AddScoped<IReparacionRepositorio, RepositorioReparacion>();
+builder.Services.AddScoped<IFacturaRepositorio, RepositorioFactura>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 
