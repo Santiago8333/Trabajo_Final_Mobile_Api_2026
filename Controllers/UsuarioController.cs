@@ -101,8 +101,57 @@ public class UsuarioController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id}")]
+    [Authorize(Policy = "Administrador")]
+    public async Task<IActionResult> Put(int id, Usuario request)
+    {
+        var usuario = await _repositorio.ObtenerPorIdAsync(id);
+        if (usuario is null)
+            return NotFound();
 
+        var existente = await _repositorio.ObtenerPorEmailAsync(request.Email);
+        if (existente is not null && existente.id_Usuario != id)
+            return Conflict("El email ya esta registrado.");
 
+        usuario.Nombre = request.Nombre;
+        usuario.Apellido = request.Apellido;
+        usuario.Especializacion = request.Especializacion;
+        usuario.Email = request.Email;
+        usuario.Rol = request.Rol;
+
+        await _repositorio.ActualizarAsync(usuario);
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}/clave")]
+    [Authorize(Policy = "Administrador")]
+    public async Task<IActionResult> CambiarClave(int id, CambiarClaveDto request)
+    {
+        var usuario = await _repositorio.ObtenerPorIdAsync(id);
+        if (usuario is null)
+            return NotFound();
+
+        var salt = _configuration["Salt"] ?? "";
+        usuario.Clave = ClaveHelper.Hashear(request.Clave, salt);
+
+        await _repositorio.ActualizarAsync(usuario);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Policy = "Administrador")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var usuario = await _repositorio.ObtenerPorIdAsync(id);
+        if (usuario is null)
+            return NotFound();
+
+        await _repositorio.EliminarAsync(id);
+
+        return NoContent();
+    }
 
 
 

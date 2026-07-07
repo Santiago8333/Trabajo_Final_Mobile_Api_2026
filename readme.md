@@ -60,6 +60,46 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `409 Conflict` si el email ya está registrado / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Registra un nuevo usuario. La clave se guarda hasheada (SHA256 + salt).
 
+### 🔸 Actualizar Usuario
+
+- **Método:** PUT
+- **Ruta:** `/api/Usuario/{id}`
+- **Autorización:** Requiere token de rol **Administrador**
+- **Path Param:**
+  - `id`: ID del usuario
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Usuario` (JSON)
+  - `Nombre`: string
+  - `Apellido`: string
+  - `Especializacion`: string
+  - `Email`: string
+  - `Rol`: int (`1` = Administrador, `2` = Empleado)
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `409 Conflict` si el email ya pertenece a otro usuario / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
+- **Descripción:** Actualiza los datos de un usuario existente. No modifica la clave.
+
+### 🔸 Cambiar Clave
+
+- **Método:** PUT
+- **Ruta:** `/api/Usuario/{id}/clave`
+- **Autorización:** Requiere token de rol **Administrador**
+- **Path Param:**
+  - `id`: ID del usuario
+- **Tipo de envío:** application/json
+- **Cuerpo:**
+  - `Clave`: string
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
+- **Descripción:** Cambia únicamente la clave del usuario. La nueva clave se guarda hasheada (SHA256 + salt).
+
+### 🔸 Eliminar Usuario
+
+- **Método:** DELETE
+- **Ruta:** `/api/Usuario/{id}`
+- **Autorización:** Requiere token de rol **Administrador**
+- **Path Param:**
+  - `id`: ID del usuario
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
+- **Descripción:** Elimina un usuario.
+
 ---
 
 ## 🔧 Stock
