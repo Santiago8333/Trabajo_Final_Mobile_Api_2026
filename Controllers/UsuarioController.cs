@@ -15,11 +15,13 @@ public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioRepositorio _repositorio;
     private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _entorno;
 
-    public UsuarioController(IUsuarioRepositorio repositorio, IConfiguration configuration)
+    public UsuarioController(IUsuarioRepositorio repositorio, IConfiguration configuration, IWebHostEnvironment entorno)
     {
         _repositorio = repositorio;
         _configuration = configuration;
+        _entorno = entorno;
     }
 
     [HttpPost("login")]
@@ -93,7 +95,8 @@ public class UsuarioController : ControllerBase
             Especializacion = request.Especializacion,
             Email = request.Email,
             Clave = ClaveHelper.Hashear(request.Clave, salt),
-            Rol = request.Rol
+            Rol = request.Rol,
+            Avatar = "avatars/default-avatar.png"
         };
 
         await _repositorio.AgregarAsync(usuario);
@@ -140,6 +143,54 @@ public class UsuarioController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{id}/avatar")]
+    public async Task<IActionResult> SubirAvatar(int id, IFormFile archivo)
+    {
+        var usuario = await _repositorio.ObtenerPorIdAsync(id);
+        if (usuario is null)
+            return NotFound();
+
+        if (archivo is null || archivo.Length == 0)
+            return BadRequest("No se envio ningun archivo.");
+
+        var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
+        var permitidas = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        if (!permitidas.Contains(extension))
+            return BadRequest("Formato no permitido. Use jpg, jpeg, png o webp.");
+
+        var carpeta = Path.Combine(_entorno.WebRootPath ?? Path.Combine(_entorno.ContentRootPath, "wwwroot"), "avatars");
+        Directory.CreateDirectory(carpeta);
+
+        // Elimina el avatar anterior
+        EliminarArchivoAvatar(usuario.Avatar);
+
+        var nombreArchivo = $"usuario_{id}{extension}";
+        var rutaFisica = Path.Combine(carpeta, nombreArchivo);
+
+        using (var stream = new FileStream(rutaFisica, FileMode.Create))
+        {
+            await archivo.CopyToAsync(stream);
+        }
+
+        usuario.Avatar = $"avatars/{nombreArchivo}";
+        await _repositorio.ActualizarAsync(usuario);
+
+        return Ok(new { avatar = usuario.Avatar });
+    }
+
+    private void EliminarArchivoAvatar(string avatar)
+    {
+       
+        if (string.IsNullOrEmpty(avatar) || avatar == "avatars/default-avatar.png")
+            return;
+
+        var raiz = _entorno.WebRootPath ?? Path.Combine(_entorno.ContentRootPath, "wwwroot");
+        var rutaFisica = Path.Combine(raiz, avatar.Replace('/', Path.DirectorySeparatorChar));
+
+        if (System.IO.File.Exists(rutaFisica))
+            System.IO.File.Delete(rutaFisica);
+    }
+
     [HttpDelete("{id}")]
     [Authorize(Policy = "Administrador")]
     public async Task<IActionResult> Delete(int id)
@@ -147,6 +198,8 @@ public class UsuarioController : ControllerBase
         var usuario = await _repositorio.ObtenerPorIdAsync(id);
         if (usuario is null)
             return NotFound();
+
+        EliminarArchivoAvatar(usuario.Avatar);
 
         await _repositorio.EliminarAsync(id);
 

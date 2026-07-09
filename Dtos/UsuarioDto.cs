@@ -10,6 +10,7 @@ public class UsuarioDto
     public string Especializacion { get; set; } = "";
     public string Email { get; set; } = "";
     public int Rol { get; set; }
+    public string Avatar { get; set; } = "";
     public DateOnly Fecha_Creacion { get; set; }
 
     public static UsuarioDto DesdeUsuario(Usuario usuario) => new()
@@ -20,6 +21,7 @@ public class UsuarioDto
         Especializacion = usuario.Especializacion,
         Email = usuario.Email,
         Rol = usuario.Rol,
+        Avatar = usuario.Avatar,
         Fecha_Creacion = usuario.Fecha_Creacion
     };
 }

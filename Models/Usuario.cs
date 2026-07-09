@@ -21,6 +21,8 @@ public class Usuario()
 
     public int Rol  { get; set; }
 
+    public string Avatar { get; set; } = "";
+
     public DateOnly Fecha_Creacion {get;set;}
 
 

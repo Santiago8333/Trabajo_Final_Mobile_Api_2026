@@ -58,7 +58,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
   - `Clave`: string
   - `Rol`: int (`1` = Administrador, `2` = Empleado)
 - **Respuesta:** `204 No Content` / `409 Conflict` si el email ya está registrado / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
-- **Descripción:** Registra un nuevo usuario. La clave se guarda hasheada (SHA256 + salt).
+- **Descripción:** Registra un nuevo usuario. La clave se guarda hasheada (SHA256 + salt). Se le asigna el avatar por defecto (`avatars/default-avatar.png`).
 
 ### 🔸 Actualizar Usuario
 
@@ -98,7 +98,20 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Path Param:**
   - `id`: ID del usuario
 - **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
-- **Descripción:** Elimina un usuario.
+- **Descripción:** Elimina un usuario. También elimina su archivo de avatar (salvo que sea el avatar por defecto).
+
+### 🔸 Subir Avatar
+
+- **Método:** POST
+- **Ruta:** `/api/Usuario/{id}/avatar`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del usuario
+- **Tipo de envío:** multipart/form-data
+- **Cuerpo:**
+  - `archivo`: file (imagen `.jpg`, `.jpeg`, `.png` o `.webp`)
+- **Respuesta:** `{ "avatar": "avatars/usuario_{id}.{ext}" }` / `400 Bad Request` si no se envía archivo o el formato no está permitido / `404 Not Found` si el usuario no existe / `401 Unauthorized` sin token
+- **Descripción:** Sube la imagen de avatar del usuario. Se guarda en `wwwroot/avatars/` como `usuario_{id}.{ext}` (una imagen por usuario, reemplaza la anterior). La ruta queda accesible en `http://localhost:5064/avatars/usuario_{id}.{ext}`.
 
 ---
 
@@ -163,7 +176,15 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
 ---
 
-`UsuarioDto` no incluye el campo `Clave`.
+`UsuarioDto` no incluye el campo `Clave`. Sí incluye `Avatar`, que es la ruta relativa a la imagen del usuario (por ejemplo `avatars/usuario_5.png`).
+
+Las imágenes de avatar se sirven como archivos estáticos y son accesibles **sin token** en:
+
+```
+http://localhost:5064/<Avatar>
+```
+
+Por ejemplo: `http://localhost:5064/avatars/usuario_5.png`
 
 Para acceder a endpoints protegidos con políticas (`Administrador`, `Empleado`), se debe enviar el token obtenido en el login como header:
 
