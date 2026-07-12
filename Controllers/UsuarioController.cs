@@ -96,7 +96,8 @@ public class UsuarioController : ControllerBase
             Email = request.Email,
             Clave = ClaveHelper.Hashear(request.Clave, salt),
             Rol = request.Rol,
-            Avatar = "avatars/default-avatar.png"
+            Avatar = "avatars/default-avatar.png",
+            Fecha_Creacion = DateOnly.FromDateTime(DateTime.Now)
         };
 
         await _repositorio.AgregarAsync(usuario);
