@@ -68,6 +68,17 @@ public class UsuarioController : ControllerBase
         return Ok(usuarios.Select(UsuarioDto.DesdeUsuario));
     }
 
+    [HttpGet("buscar")]
+    [Authorize(Policy = "Administrador")]
+    public async Task<ActionResult<List<UsuarioDto>>> Buscar([FromQuery] string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+            return Ok(new List<UsuarioDto>());
+
+        var usuarios = await _repositorio.BuscarAsync(texto);
+        return Ok(usuarios.Select(UsuarioDto.DesdeUsuario));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<UsuarioDto>> GetPorId(int id)
     {

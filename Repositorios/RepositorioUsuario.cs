@@ -6,6 +6,7 @@ namespace Trabajo_Final_Mobile_Api_2026.Repositorios;
 public interface IUsuarioRepositorio
 {
     Task<List<Usuario>> ObtenerTodosAsync();
+    Task<List<Usuario>> BuscarAsync(string texto);
     Task<Usuario?> ObtenerPorIdAsync(int id);
     Task<Usuario?> ObtenerPorEmailAsync(string email);
     Task AgregarAsync(Usuario usuario);
@@ -25,6 +26,15 @@ public class RepositorioUsuario : IUsuarioRepositorio
     public async Task<List<Usuario>> ObtenerTodosAsync()
     {
         return await _context.Usuario.ToListAsync();
+    }
+
+    public async Task<List<Usuario>> BuscarAsync(string texto)
+    {
+        return await _context.Usuario
+            .Where(u => u.Email.Contains(texto)
+                     || u.Nombre.Contains(texto)
+                     || u.Apellido.Contains(texto))
+            .ToListAsync();
     }
 
     public async Task<Usuario?> ObtenerPorIdAsync(int id)
