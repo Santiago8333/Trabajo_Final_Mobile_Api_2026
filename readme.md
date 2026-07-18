@@ -34,6 +34,17 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<UsuarioDto>` / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Devuelve todos los usuarios registrados.
 
+### 🔸 Buscar Usuarios
+
+- **Método:** GET
+- **Ruta:** `/api/Usuario/buscar`
+- **Autorización:** Requiere token de rol **Administrador**
+- **Query Param:**
+  - `texto`: texto a buscar (coincidencia parcial en email, nombre o apellido)
+- **Ejemplo:** `/api/Usuario/buscar?texto=juan`
+- **Respuesta:** `List<UsuarioDto>` (lista vacía si `texto` está vacío o no hay coincidencias) / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
+- **Descripción:** Filtra los usuarios cuyo email, nombre o apellido contengan el texto indicado.
+
 ### 🔸 Obtener Usuario por Id
 
 - **Método:** GET
