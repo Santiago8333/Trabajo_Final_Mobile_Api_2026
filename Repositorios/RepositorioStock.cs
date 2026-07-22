@@ -15,6 +15,7 @@ public interface IStockRepositorio
 
     Task EliminarAsync(int id);
 
+    Task<List<Stock>> BuscarAsync(string texto);
 
 }
 
@@ -59,6 +60,13 @@ public class RepositorioStock : IStockRepositorio
             await _context.SaveChangesAsync();
         }
 
+    }
+
+    public async Task<List<Stock>> BuscarAsync(string texto)
+    {
+        return await _context.Stock
+            .Where(s => s.Nombre_Pieza.Contains(texto))
+            .ToListAsync();
     }
 
 

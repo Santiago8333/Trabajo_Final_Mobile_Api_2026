@@ -82,7 +82,15 @@ public class StockController : ControllerBase
 
         return NoContent();
     }
+    [HttpGet("buscar")]
+    public async Task<ActionResult<List<Stock>>> Buscar([FromQuery] string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+            return Ok(new List<Stock>());
 
+        var stocks = await _repositorio.BuscarAsync(texto);
+        return Ok(stocks);
+    }
 
 
 }
