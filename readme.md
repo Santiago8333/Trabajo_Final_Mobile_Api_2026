@@ -2,16 +2,16 @@
 
 API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
-## 📘 API REST - Documentación de Endpoints
+## API REST - Documentación de Endpoints
 
 **Base URL:**
 `http://localhost:5064/`
 
 ---
 
-## 🔐 Autenticación
+## Autenticación
 
-### 🔸 Login
+### Login
 
 - **Método:** POST
 - **Ruta:** `/api/Usuario/login`
@@ -24,9 +24,9 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
 ---
 
-## 👤 Usuario
+## Usuario
 
-### 🔸 Obtener Todos los Usuarios
+### Obtener Todos los Usuarios
 
 - **Método:** GET
 - **Ruta:** `/api/Usuario`
@@ -34,7 +34,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<UsuarioDto>` / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Devuelve todos los usuarios registrados.
 
-### 🔸 Buscar Usuarios
+### Buscar Usuarios
 
 - **Método:** GET
 - **Ruta:** `/api/Usuario/buscar`
@@ -45,7 +45,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<UsuarioDto>` (lista vacía si `texto` está vacío o no hay coincidencias) / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Filtra los usuarios cuyo email, nombre o apellido contengan el texto indicado.
 
-### 🔸 Obtener Usuario por Id
+### Obtener Usuario por Id
 
 - **Método:** GET
 - **Ruta:** `/api/Usuario/{id}`
@@ -55,7 +55,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `UsuarioDto` / `404 Not Found` si no existe / `401 Unauthorized` sin token
 - **Descripción:** Devuelve los datos de un usuario específico.
 
-### 🔸 Crear Usuario
+### Crear Usuario
 
 - **Método:** POST
 - **Ruta:** `/api/Usuario`
@@ -71,7 +71,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `409 Conflict` si el email ya está registrado / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Registra un nuevo usuario. La clave se guarda hasheada (SHA256 + salt). Se le asigna el avatar por defecto (`avatars/default-avatar.png`).
 
-### 🔸 Actualizar Usuario
+### Actualizar Usuario
 
 - **Método:** PUT
 - **Ruta:** `/api/Usuario/{id}`
@@ -88,7 +88,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `409 Conflict` si el email ya pertenece a otro usuario / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Actualiza los datos de un usuario existente. No modifica la clave.
 
-### 🔸 Cambiar Clave
+### Cambiar Clave
 
 - **Método:** PUT
 - **Ruta:** `/api/Usuario/{id}/clave`
@@ -101,7 +101,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Cambia únicamente la clave del usuario. La nueva clave se guarda hasheada (SHA256 + salt).
 
-### 🔸 Eliminar Usuario
+### Eliminar Usuario
 
 - **Método:** DELETE
 - **Ruta:** `/api/Usuario/{id}`
@@ -111,7 +111,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token / `403 Forbidden` si no es Administrador
 - **Descripción:** Elimina un usuario. También elimina su archivo de avatar (salvo que sea el avatar por defecto).
 
-### 🔸 Subir Avatar
+### Subir Avatar
 
 - **Método:** POST
 - **Ruta:** `/api/Usuario/{id}/avatar`
@@ -126,9 +126,9 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
 ---
 
-## 🔧 Stock
+## Stock
 
-### 🔸 Obtener Todo el Stock
+### Obtener Todo el Stock
 
 - **Método:** GET
 - **Ruta:** `/api/Stock`
@@ -136,7 +136,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<Stock>` / `401 Unauthorized` sin token
 - **Descripción:** Devuelve todas las piezas registradas en stock.
 
-### 🔸 Obtener Stock por Id
+### Obtener Stock por Id
 
 - **Método:** GET
 - **Ruta:** `/api/Stock/{id}`
@@ -146,7 +146,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `Stock` / `404 Not Found` si no existe / `401 Unauthorized` sin token
 - **Descripción:** Devuelve los datos de una pieza específica.
 
-### 🔸 Crear Stock
+### Crear Stock
 
 - **Método:** POST
 - **Ruta:** `/api/Stock`
@@ -160,7 +160,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `401 Unauthorized` sin token
 - **Descripción:** Registra una nueva pieza en el stock.
 
-### 🔸 Actualizar Stock
+### Actualizar Stock
 
 - **Método:** PUT
 - **Ruta:** `/api/Stock/{id}`
@@ -175,7 +175,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
 - **Descripción:** Actualiza los datos de una pieza existente. No modifica `Fecha_Creacion`.
 
-### 🔸 Eliminar Stock
+### Eliminar Stock
 
 - **Método:** DELETE
 - **Ruta:** `/api/Stock/{id}`

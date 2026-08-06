@@ -61,8 +61,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // primero: ¿quién sos?
+app.UseAuthorization(); // después: ¿podés?
 
 app.MapControllers();
 
