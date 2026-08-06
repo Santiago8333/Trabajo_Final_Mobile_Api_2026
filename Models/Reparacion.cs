@@ -16,7 +16,6 @@ public class Reparacion()
 
     public DateOnly Fecha_Ingreso {get; set;}
 
-
     public string Descripcion_Trabajo_Realizado { get; set; } = "";
 
     public string Motivo_Ingreso { get; set; } = "";

@@ -7,13 +7,15 @@ public interface IVehiculoRepositorio
 {
     Task<List<Vehiculo>> ObtenerTodosAsync();
 
+    Task<Vehiculo?> ObtenerPorIdAsync(int id);
+
     Task<Vehiculo?> ObtenerPorMatriculaAsync(string matricula);
 
     Task AgregarAsync(Vehiculo vehiculo);
 
     Task ActualizarAsync(Vehiculo vehiculo);
 
-    Task EliminarAsync(string matricula);
+    Task EliminarAsync(int id);
 }
 
 public class RepositorioVehiculo : IVehiculoRepositorio
@@ -30,9 +32,15 @@ public class RepositorioVehiculo : IVehiculoRepositorio
         return await _context.Vehiculo.ToListAsync();
     }
 
+    public async Task<Vehiculo?> ObtenerPorIdAsync(int id)
+    {
+        return await _context.Vehiculo.FindAsync(id);
+    }
+
     public async Task<Vehiculo?> ObtenerPorMatriculaAsync(string matricula)
     {
-        return await _context.Vehiculo.FindAsync(matricula);
+        return await _context.Vehiculo
+            .FirstOrDefaultAsync(v => v.Matricula == matricula);
     }
 
     public async Task AgregarAsync(Vehiculo vehiculo)
@@ -47,9 +55,9 @@ public class RepositorioVehiculo : IVehiculoRepositorio
         await _context.SaveChangesAsync();
     }
 
-    public async Task EliminarAsync(string matricula)
+    public async Task EliminarAsync(int id)
     {
-        var vehiculo = await _context.Vehiculo.FindAsync(matricula);
+        var vehiculo = await _context.Vehiculo.FindAsync(id);
 
         if (vehiculo is not null)
         {

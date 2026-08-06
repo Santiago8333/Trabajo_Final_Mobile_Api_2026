@@ -7,6 +7,8 @@ namespace Trabajo_Final_Mobile_Api_2026.Models;
 public class Vehiculo
 {
     [Key]
+    public int id_Vehiculo {get;set;}
+    
     public string Matricula { get; set; } = "";
 
     public string Modelo { get; set; } = "";

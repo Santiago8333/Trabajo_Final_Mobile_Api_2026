@@ -136,6 +136,17 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<Stock>` / `401 Unauthorized` sin token
 - **Descripción:** Devuelve todas las piezas registradas en stock.
 
+### Buscar Stock
+
+- **Método:** GET
+- **Ruta:** `/api/Stock/buscar`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Query Param:**
+  - `texto`: texto a buscar (coincidencia parcial en el nombre de la pieza)
+- **Ejemplo:** `/api/Stock/buscar?texto=filtro`
+- **Respuesta:** `List<Stock>` (lista vacía si `texto` está vacío o no hay coincidencias) / `401 Unauthorized` sin token
+- **Descripción:** Filtra las piezas cuyo `Nombre_Pieza` contenga el texto indicado.
+
 ### Obtener Stock por Id
 
 - **Método:** GET
@@ -184,6 +195,76 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
   - `id`: ID del stock
 - **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
 - **Descripción:** Elimina una pieza del stock.
+
+---
+
+## Vehiculo
+
+### Obtener Todos los Vehículos
+
+- **Método:** GET
+- **Ruta:** `/api/Vehiculo`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Respuesta:** `List<Vehiculo>` / `401 Unauthorized` sin token
+- **Descripción:** Devuelve todos los vehículos registrados.
+
+### Obtener Vehículo por Id
+
+- **Método:** GET
+- **Ruta:** `/api/Vehiculo/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del vehículo (`id_Vehiculo`)
+- **Respuesta:** `Vehiculo` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Devuelve los datos de un vehículo específico.
+
+### Obtener Vehículo por Matrícula
+
+- **Método:** GET
+- **Ruta:** `/api/Vehiculo/matricula/{matricula}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `matricula`: matrícula exacta del vehículo
+- **Ejemplo:** `/api/Vehiculo/matricula/AB123CD`
+- **Respuesta:** `Vehiculo` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Devuelve el vehículo cuya matrícula coincide exactamente con la indicada.
+
+### Crear Vehículo
+
+- **Método:** POST
+- **Ruta:** `/api/Vehiculo`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Vehiculo` (JSON)
+  - `Matricula`: string
+  - `Modelo`: string
+  - `Fecha_Creacion`: date (`yyyy-MM-dd`)
+- **Respuesta:** `204 No Content` / `401 Unauthorized` sin token
+- **Descripción:** Registra un nuevo vehículo.
+
+### Actualizar Vehículo
+
+- **Método:** PUT
+- **Ruta:** `/api/Vehiculo/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del vehículo (`id_Vehiculo`)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Vehiculo` (JSON)
+  - `Matricula`: string
+  - `Modelo`: string
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Actualiza los datos de un vehículo existente. No modifica `Fecha_Creacion`.
+
+### Eliminar Vehículo
+
+- **Método:** DELETE
+- **Ruta:** `/api/Vehiculo/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del vehículo (`id_Vehiculo`)
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Elimina un vehículo.
 
 ---
 
