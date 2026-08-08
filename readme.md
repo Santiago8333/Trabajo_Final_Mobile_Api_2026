@@ -268,6 +268,78 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
 ---
 
+## Factura
+
+### Obtener Todas las Facturas
+
+- **Método:** GET
+- **Ruta:** `/api/Factura`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Respuesta:** `List<Factura>` / `401 Unauthorized` sin token
+- **Descripción:** Devuelve todas las facturas registradas.
+
+### Obtener Factura por Id
+
+- **Método:** GET
+- **Ruta:** `/api/Factura/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la factura (`id_Factura`)
+- **Respuesta:** `Factura` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Devuelve los datos de una factura específica.
+
+### Crear Factura
+
+- **Método:** POST
+- **Ruta:** `/api/Factura`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Factura` (JSON)
+  - `idReparacion`: int
+  - `Total_Factura`: string
+  - `Estado`: bool (`true` = pagada, `false` = pendiente)
+- **Respuesta:** `204 No Content` / `401 Unauthorized` sin token
+- **Descripción:** Registra una nueva factura.
+
+### Actualizar Factura
+
+- **Método:** PUT
+- **Ruta:** `/api/Factura/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la factura (`id_Factura`)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Factura` (JSON)
+  - `idReparacion`: int
+  - `Total_Factura`: string
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Actualiza los datos de una factura existente. No modifica `Estado`.
+
+### Cambiar Estado de la Factura
+
+- **Método:** PUT
+- **Ruta:** `/api/Factura/{id}/estado`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la factura (`id_Factura`)
+- **Tipo de envío:** application/json
+- **Cuerpo:**
+  - `Estado`: bool (`true` = pagada, `false` = pendiente)
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Cambia únicamente el estado de la factura. No modifica el resto de los datos.
+
+### Eliminar Factura
+
+- **Método:** DELETE
+- **Ruta:** `/api/Factura/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la factura (`id_Factura`)
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Elimina una factura.
+
+---
+
 `UsuarioDto` no incluye el campo `Clave`. Sí incluye `Avatar`, que es la ruta relativa a la imagen del usuario (por ejemplo `avatars/usuario_5.png`).
 
 Las imágenes de avatar se sirven como archivos estáticos y son accesibles **sin token** en:

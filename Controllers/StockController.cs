@@ -82,6 +82,8 @@ public class StockController : ControllerBase
 
         return NoContent();
     }
+    
+    //buscar por nombre de pieza
     [HttpGet("buscar")]
     public async Task<ActionResult<List<Stock>>> Buscar([FromQuery] string texto)
     {

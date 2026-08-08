@@ -10,7 +10,7 @@ public class Reparacion()
     public int id_Reparacion  { get; set; }
 
     public int idUsuario { get; set; }
-    public string idVehiculo { get; set; } = "";
+    public int idVehiculo { get; set; }
 
     public string Nombre_Cliente { get; set; } = "";
 
