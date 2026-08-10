@@ -24,6 +24,7 @@ builder.Services.AddScoped<IStockRepositorio,RepositorioStock>();
 builder.Services.AddScoped<IVehiculoRepositorio, RepositorioVehiculo>();
 builder.Services.AddScoped<IReparacionRepositorio, RepositorioReparacion>();
 builder.Services.AddScoped<IFacturaRepositorio, RepositorioFactura>();
+builder.Services.AddScoped<IDetalleReparacionRepositorio, RepositorioDetalleReparacion>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 
