@@ -95,4 +95,15 @@ public class VehiculoController : ControllerBase
         return NoContent();
     }
 
+    //buscar
+    [HttpGet("buscar")]
+    public async Task<ActionResult<List<Vehiculo>>> Buscar([FromQuery] string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+            return Ok(new List<Vehiculo>());
+
+        var vehiculos = await _repositorio.BuscarAsync(texto);
+        return Ok(vehiculos);
+    }
+
 }

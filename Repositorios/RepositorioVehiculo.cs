@@ -16,6 +16,8 @@ public interface IVehiculoRepositorio
     Task ActualizarAsync(Vehiculo vehiculo);
 
     Task EliminarAsync(int id);
+
+    Task<List<Vehiculo>> BuscarAsync(string texto);
 }
 
 public class RepositorioVehiculo : IVehiculoRepositorio
@@ -65,4 +67,13 @@ public class RepositorioVehiculo : IVehiculoRepositorio
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<List<Vehiculo>> BuscarAsync(string texto)
+    {
+        return await _context.Vehiculo
+            .Where(u => u.Matricula.Contains(texto)
+                     || u.Modelo.Contains(texto))
+            .ToListAsync();
+    }
+
 }

@@ -99,6 +99,17 @@ public class ReparacionController : ControllerBase
         return NoContent();
     }
 
+    //buscar
+    [HttpGet("buscar")]
+    public async Task<ActionResult<List<Reparacion>>> Buscar([FromQuery] string texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+            return Ok(new List<Reparacion>());
+
+        var reparacions = await _repositorio.BuscarAsync(texto);
+        return Ok(reparacions);
+    }
+
     // ----- Detalle de reparacion -----
 
     //traer todos los detalles

@@ -14,6 +14,8 @@ public interface IReparacionRepositorio
     Task ActualizarAsync(Reparacion reparacion);
 
     Task EliminarAsync(int id);
+
+    Task<List<Reparacion>> BuscarAsync(string texto);
 }
 
 public class RepositorioReparacion : IReparacionRepositorio
@@ -56,5 +58,14 @@ public class RepositorioReparacion : IReparacionRepositorio
             _context.Reparacion.Remove(reparacion);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<List<Reparacion>> BuscarAsync(string texto)
+    {
+        return await _context.Reparacion
+            .Where(r => r.Nombre_Cliente.Contains(texto)
+                     || r.Motivo_Ingreso.Contains(texto)
+                     || r.Descripcion_Trabajo_Realizado.Contains(texto))
+            .ToListAsync();
     }
 }

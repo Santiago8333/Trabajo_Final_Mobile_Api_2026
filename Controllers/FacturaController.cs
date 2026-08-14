@@ -99,4 +99,20 @@ public class FacturaController : ControllerBase
         return NoContent();
     }
 
+    //filtrar por reparacion
+    [HttpGet("reparacion/{idReparacion}")]
+    public async Task<ActionResult<List<Factura>>> GetPorReparacion(int idReparacion)
+    {
+        var facturas = await _repositorio.ObtenerPorReparacionAsync(idReparacion);
+        return Ok(facturas);
+    }
+
+    //filtrar por estado
+    [HttpGet("estado/{estado}")]
+    public async Task<ActionResult<List<Factura>>> GetPorEstado(bool estado)
+    {
+        var facturas = await _repositorio.ObtenerPorEstadoAsync(estado);
+        return Ok(facturas);
+    }
+
 }

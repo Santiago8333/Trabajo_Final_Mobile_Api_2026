@@ -14,6 +14,10 @@ public interface IFacturaRepositorio
     Task ActualizarAsync(Factura factura);
 
     Task EliminarAsync(int id);
+
+    Task<List<Factura>> ObtenerPorReparacionAsync(int idReparacion);
+
+    Task<List<Factura>> ObtenerPorEstadoAsync(bool estado);
 }
 
 public class RepositorioFactura : IFacturaRepositorio
@@ -56,5 +60,20 @@ public class RepositorioFactura : IFacturaRepositorio
             _context.Factura.Remove(factura);
             await _context.SaveChangesAsync();
         }
+    }
+
+
+    public async Task<List<Factura>> ObtenerPorReparacionAsync(int idReparacion)
+    {
+        return await _context.Factura
+            .Where(f => f.idReparacion == idReparacion)
+            .ToListAsync();
+    }
+
+    public async Task<List<Factura>> ObtenerPorEstadoAsync(bool estado)
+    {
+        return await _context.Factura
+            .Where(f => f.Estado == estado)
+            .ToListAsync();
     }
 }
