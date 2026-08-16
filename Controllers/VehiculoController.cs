@@ -106,4 +106,20 @@ public class VehiculoController : ControllerBase
         return Ok(vehiculos);
     }
 
+    //paginado
+    [HttpGet("paginado")]
+    public async Task<IActionResult> GetPaginado([FromQuery] int pagina = 1, [FromQuery] int tamanio = 10)
+    {
+        if (pagina < 1)
+            pagina = 1;
+
+        if (tamanio < 1 || tamanio > 100)
+            tamanio = 10;
+
+        var vehiculos = await _repositorio.ObtenerPaginadoAsync(pagina, tamanio);
+        var total = await _repositorio.ContarAsync();
+
+        return Ok(new { total, pagina, tamanio, datos = vehiculos });
+    }
+
 }

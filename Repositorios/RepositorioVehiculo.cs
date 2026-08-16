@@ -18,6 +18,10 @@ public interface IVehiculoRepositorio
     Task EliminarAsync(int id);
 
     Task<List<Vehiculo>> BuscarAsync(string texto);
+
+    Task<List<Vehiculo>> ObtenerPaginadoAsync(int pagina, int tamanio);
+
+    Task<int> ContarAsync();
 }
 
 public class RepositorioVehiculo : IVehiculoRepositorio
@@ -74,6 +78,20 @@ public class RepositorioVehiculo : IVehiculoRepositorio
             .Where(u => u.Matricula.Contains(texto)
                      || u.Modelo.Contains(texto))
             .ToListAsync();
+    }
+
+    public async Task<List<Vehiculo>> ObtenerPaginadoAsync(int pagina, int tamanio)
+    {
+        return await _context.Vehiculo
+            .OrderBy(v => v.id_Vehiculo)
+            .Skip((pagina - 1) * tamanio)
+            .Take(tamanio)
+            .ToListAsync();
+    }
+
+    public async Task<int> ContarAsync()
+    {
+        return await _context.Vehiculo.CountAsync();
     }
 
 }
