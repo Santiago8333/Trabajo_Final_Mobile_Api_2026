@@ -208,6 +208,18 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<Vehiculo>` / `401 Unauthorized` sin token
 - **Descripción:** Devuelve todos los vehículos registrados.
 
+### Obtener Vehículos Paginados
+
+- **Método:** GET
+- **Ruta:** `/api/Vehiculo/paginado`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Query Params:**
+  - `pagina`: número de página, empieza en `1` (opcional, por defecto `1`)
+  - `tamanio`: cantidad de vehículos por página (opcional, por defecto `10`, máximo `100`)
+- **Ejemplo:** `/api/Vehiculo/paginado?pagina=2&tamanio=10`
+- **Respuesta:** `{ "total": int, "pagina": int, "tamanio": int, "datos": List<Vehiculo> }` / `401 Unauthorized` sin token
+- **Descripción:** Devuelve los vehículos de a páginas, ordenados por `id_Vehiculo`. `total` es la cantidad total de vehículos registrados (sirve para calcular cuántas páginas hay) y `datos` son los de la página pedida. Si `pagina` o `tamanio` reciben valores inválidos se usan los valores por defecto.
+
 ### Obtener Vehículo por Id
 
 - **Método:** GET
