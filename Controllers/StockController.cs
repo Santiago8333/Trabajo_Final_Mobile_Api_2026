@@ -29,6 +29,9 @@ public class StockController : ControllerBase
         return Ok(stock);
     }
 
+
+
+
     [HttpGet("{id}")]
     public async Task<ActionResult<Stock>> GetPorId(int id)
     {

@@ -15,12 +15,14 @@ public class ReparacionController : ControllerBase
 {
     private readonly IReparacionRepositorio _repositorio;
     private readonly IDetalleReparacionRepositorio _detalleRepositorio;
+    private readonly IStockRepositorio _stockRepositorio;
     private readonly IConfiguration _configuration;
 
-    public ReparacionController(IReparacionRepositorio repositorio,IDetalleReparacionRepositorio detalleRepositorio,IConfiguration configuration)
+    public ReparacionController(IReparacionRepositorio repositorio,IDetalleReparacionRepositorio detalleRepositorio,IStockRepositorio stockRepositorio,IConfiguration configuration)
     {
         _repositorio = repositorio;
         _detalleRepositorio = detalleRepositorio;
+        _stockRepositorio = stockRepositorio;
         _configuration = configuration;
     }
 
@@ -139,10 +141,20 @@ public class ReparacionController : ControllerBase
         return Ok(detalleReparacions);
     }
 
-    //agregar detalle
+    //agregar detalle (descuenta el stock)
     [HttpPost("detalle")]
     public async Task<IActionResult> PostDetalle(DetalleReparacion request)
     {
+        if (request.Cantidad_Usada <= 0)
+            return BadRequest("La cantidad usada debe ser mayor a 0.");
+
+        var stock = await _stockRepositorio.ObtenerPorIdAsync(request.idStock);
+        if (stock is null)
+            return BadRequest("La pieza no existe en el stock.");
+
+        if (stock.Cantidad_Stock < request.Cantidad_Usada)
+            return Conflict($"Stock insuficiente. Disponible: {stock.Cantidad_Stock}.");
+
         var detalleReparacion = new DetalleReparacion
         {
             idStock = request.idStock,
@@ -158,7 +170,7 @@ public class ReparacionController : ControllerBase
         return NoContent();
     }
 
-    //actualizar detalle
+    //actualizar detalle (ajusta el stock)
     [HttpPut("detalle/{id}")]
     public async Task<IActionResult> PutDetalle(int id, DetalleReparacion request)
     {
@@ -166,18 +178,36 @@ public class ReparacionController : ControllerBase
         if (detalleReparacion is null)
             return NotFound();
 
+        if (request.Cantidad_Usada <= 0)
+            return BadRequest("La cantidad usada debe ser mayor a 0.");
+
+        var stock = await _stockRepositorio.ObtenerPorIdAsync(request.idStock);
+        if (stock is null)
+            return BadRequest("La pieza no existe en el stock.");
+
+        //si es la misma pieza, lo que ya estaba usado vuelve a estar disponible
+        var disponible = stock.Cantidad_Stock;
+        if (request.idStock == detalleReparacion.idStock)
+            disponible += detalleReparacion.Cantidad_Usada;
+
+        if (disponible < request.Cantidad_Usada)
+            return Conflict($"Stock insuficiente. Disponible: {disponible}.");
+
+        var idStockAnterior = detalleReparacion.idStock;
+        var cantidadAnterior = detalleReparacion.Cantidad_Usada;
+
         detalleReparacion.idStock = request.idStock;
         detalleReparacion.idReparacion = request.idReparacion;
         detalleReparacion.Cantidad_Usada = request.Cantidad_Usada;
         detalleReparacion.Precio_Unitario_Momento = request.Precio_Unitario_Momento;
         detalleReparacion.Subtotal = request.Cantidad_Usada * request.Precio_Unitario_Momento;
 
-        await _detalleRepositorio.ActualizarAsync(detalleReparacion);
+        await _detalleRepositorio.ActualizarAsync(detalleReparacion, idStockAnterior, cantidadAnterior);
 
         return NoContent();
     }
 
-    //eliminar detalle
+    //eliminar detalle (devuelve la cantidad al stock)
     [HttpDelete("detalle/{id}")]
     public async Task<IActionResult> DeleteDetalle(int id)
     {

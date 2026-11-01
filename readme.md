@@ -18,7 +18,7 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Tipo de envío:** application/json
 - **Cuerpo:**
   - `Email`: string (`admin@gmail.com`)
-  - `Clave`: string (`admin`)
+  - `Clave`: string (`Admin1234`)
 - **Respuesta:** `{ "token": "string", "usuario": UsuarioDto }`
 - **Descripción:** Autentica al usuario por email y clave, y devuelve un token JWT junto con sus datos.
 
@@ -208,6 +208,17 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 - **Respuesta:** `List<Vehiculo>` / `401 Unauthorized` sin token
 - **Descripción:** Devuelve todos los vehículos registrados.
 
+### Buscar Vehículos
+
+- **Método:** GET
+- **Ruta:** `/api/Vehiculo/buscar`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Query Param:**
+  - `texto`: texto a buscar (coincidencia parcial en matrícula o modelo)
+- **Ejemplo:** `/api/Vehiculo/buscar?texto=AB`
+- **Respuesta:** `List<Vehiculo>` (lista vacía si `texto` está vacío o no hay coincidencias) / `401 Unauthorized` sin token
+- **Descripción:** Filtra los vehículos cuya `Matricula` o `Modelo` contengan el texto indicado. A diferencia de `/api/Vehiculo/matricula/{matricula}`, que devuelve un solo vehículo con matrícula exacta, este endpoint devuelve todas las coincidencias.
+
 ### Obtener Vehículos Paginados
 
 - **Método:** GET
@@ -352,6 +363,160 @@ API REST en ASP.NET Core (.NET 8) con Entity Framework Core (Pomelo MySQL).
 
 ---
 
+## Reparacion
+
+### Obtener Todas las Reparaciones
+
+- **Método:** GET
+- **Ruta:** `/api/Reparacion`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Respuesta:** `List<Reparacion>` / `401 Unauthorized` sin token
+- **Descripción:** Devuelve todas las reparaciones registradas.
+
+### Buscar Reparaciones
+
+- **Método:** GET
+- **Ruta:** `/api/Reparacion/buscar`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Query Param:**
+  - `texto`: texto a buscar (coincidencia parcial en nombre del cliente, motivo de ingreso o descripción del trabajo realizado)
+- **Ejemplo:** `/api/Reparacion/buscar?texto=frenos`
+- **Respuesta:** `List<Reparacion>` (lista vacía si `texto` está vacío o no hay coincidencias) / `401 Unauthorized` sin token
+- **Descripción:** Filtra las reparaciones cuyo `Nombre_Cliente`, `Motivo_Ingreso` o `Descripcion_Trabajo_Realizado` contengan el texto indicado.
+
+### Obtener Reparación por Id
+
+- **Método:** GET
+- **Ruta:** `/api/Reparacion/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la reparación (`id_Reparacion`)
+- **Respuesta:** `Reparacion` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Devuelve los datos de una reparación específica.
+
+### Crear Reparación
+
+- **Método:** POST
+- **Ruta:** `/api/Reparacion`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Reparacion` (JSON)
+  - `idUsuario`: int
+  - `idVehiculo`: int
+  - `Nombre_Cliente`: string
+  - `Fecha_Ingreso`: date (`yyyy-MM-dd`)
+  - `Descripcion_Trabajo_Realizado`: string
+  - `Motivo_Ingreso`: string
+  - `Costo_Mano_De_Obra`: decimal
+  - `Fecha_Creacion`: date (`yyyy-MM-dd`)
+- **Respuesta:** `204 No Content` / `401 Unauthorized` sin token
+- **Descripción:** Registra una nueva reparación.
+
+### Actualizar Reparación
+
+- **Método:** PUT
+- **Ruta:** `/api/Reparacion/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la reparación (`id_Reparacion`)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `Reparacion` (JSON)
+  - `idUsuario`: int
+  - `idVehiculo`: int
+  - `Nombre_Cliente`: string
+  - `Fecha_Ingreso`: date (`yyyy-MM-dd`)
+  - `Descripcion_Trabajo_Realizado`: string
+  - `Motivo_Ingreso`: string
+  - `Costo_Mano_De_Obra`: decimal
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Actualiza los datos de una reparación existente. No modifica `Fecha_Creacion`.
+
+### Eliminar Reparación
+
+- **Método:** DELETE
+- **Ruta:** `/api/Reparacion/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID de la reparación (`id_Reparacion`)
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Elimina una reparación.
+
+---
+
+## Detalle de Reparacion
+
+### Obtener Todos los Detalles
+
+- **Método:** GET
+- **Ruta:** `/api/Reparacion/detalle`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Respuesta:** `List<DetalleReparacion>` / `401 Unauthorized` sin token
+- **Descripción:** Devuelve todos los detalles de reparación registrados.
+
+### Obtener Detalle por Id
+
+- **Método:** GET
+- **Ruta:** `/api/Reparacion/detalle/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del detalle (`Id_Detalle`)
+- **Respuesta:** `DetalleReparacion` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Devuelve los datos de un detalle de reparación específico.
+
+### Obtener Detalles de una Reparación
+
+- **Método:** GET
+- **Ruta:** `/api/Reparacion/{idReparacion}/detalle`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `idReparacion`: ID de la reparación (`id_Reparacion`)
+- **Ejemplo:** `/api/Reparacion/3/detalle`
+- **Respuesta:** `List<DetalleReparacion>` (lista vacía si la reparación no tiene detalles) / `401 Unauthorized` sin token
+- **Descripción:** Devuelve las piezas usadas en una reparación.
+
+### Crear Detalle
+
+- **Método:** POST
+- **Ruta:** `/api/Reparacion/detalle`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `DetalleReparacion` (JSON)
+  - `idStock`: int
+  - `idReparacion`: int
+  - `Cantidad_Usada`: int
+  - `Precio_Unitario_Momento`: decimal
+  - `Fecha_Consumo`: date (`yyyy-MM-dd`)
+- **Respuesta:** `204 No Content` / `400 Bad Request` si `Cantidad_Usada` no es mayor a 0 o la pieza no existe / `409 Conflict` si no hay stock suficiente / `401 Unauthorized` sin token
+- **Descripción:** Registra una pieza usada en una reparación y **descuenta `Cantidad_Usada` de `Cantidad_Stock`** de esa pieza. El `Subtotal` se calcula automáticamente como `Cantidad_Usada * Precio_Unitario_Momento` (si se envía, se ignora).
+
+### Actualizar Detalle
+
+- **Método:** PUT
+- **Ruta:** `/api/Reparacion/detalle/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del detalle (`Id_Detalle`)
+- **Tipo de envío:** application/json
+- **Cuerpo:** Objeto `DetalleReparacion` (JSON)
+  - `idStock`: int
+  - `idReparacion`: int
+  - `Cantidad_Usada`: int
+  - `Precio_Unitario_Momento`: decimal
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `400 Bad Request` si `Cantidad_Usada` no es mayor a 0 o la pieza no existe / `409 Conflict` si no hay stock suficiente / `401 Unauthorized` sin token
+- **Descripción:** Actualiza un detalle existente y recalcula el `Subtotal`. **Ajusta el stock:** devuelve la cantidad anterior a la pieza anterior y descuenta la nueva cantidad de la pieza indicada (también si se cambia de pieza). No modifica `Fecha_Consumo`.
+
+### Eliminar Detalle
+
+- **Método:** DELETE
+- **Ruta:** `/api/Reparacion/detalle/{id}`
+- **Autorización:** Requiere token válido (cualquier rol autenticado)
+- **Path Param:**
+  - `id`: ID del detalle (`Id_Detalle`)
+- **Respuesta:** `204 No Content` / `404 Not Found` si no existe / `401 Unauthorized` sin token
+- **Descripción:** Elimina un detalle de reparación y **devuelve `Cantidad_Usada` al stock** de esa pieza.
+
+---
+
 `UsuarioDto` no incluye el campo `Clave`. Sí incluye `Avatar`, que es la ruta relativa a la imagen del usuario (por ejemplo `avatars/usuario_5.png`).
 
 Las imágenes de avatar se sirven como archivos estáticos y son accesibles **sin token** en:
@@ -367,3 +532,4 @@ Para acceder a endpoints protegidos con políticas (`Administrador`, `Empleado`)
 ```
 Authorization: Bearer <token>
 ```
+//"MySql": "Server=localhost;User=root;Password=;Database=mecanico;SslMode=none"

@@ -13,7 +13,7 @@ public interface IDetalleReparacionRepositorio
 
     Task AgregarAsync(DetalleReparacion detalle);
 
-    Task ActualizarAsync(DetalleReparacion detalle);
+    Task ActualizarAsync(DetalleReparacion detalle, int idStockAnterior, int cantidadAnterior);
 
     Task EliminarAsync(int id);
 }
@@ -44,26 +44,43 @@ public class RepositorioDetalleReparacion : IDetalleReparacionRepositorio
             .ToListAsync();
     }
 
+    //descuenta del stock la cantidad usada y guarda todo junto
     public async Task AgregarAsync(DetalleReparacion detalle)
     {
+        await AjustarStockAsync(detalle.idStock, -detalle.Cantidad_Usada);
+
         _context.DetalleReparacion.Add(detalle);
         await _context.SaveChangesAsync();
     }
 
-    public async Task ActualizarAsync(DetalleReparacion detalle)
+    //devuelve al stock la cantidad anterior y descuenta la nueva
+    public async Task ActualizarAsync(DetalleReparacion detalle, int idStockAnterior, int cantidadAnterior)
     {
+        await AjustarStockAsync(idStockAnterior, cantidadAnterior);
+        await AjustarStockAsync(detalle.idStock, -detalle.Cantidad_Usada);
+
         _context.DetalleReparacion.Update(detalle);
         await _context.SaveChangesAsync();
     }
 
+    //devuelve al stock la cantidad usada
     public async Task EliminarAsync(int id)
     {
         var detalle = await _context.DetalleReparacion.FindAsync(id);
 
         if (detalle is not null)
         {
+            await AjustarStockAsync(detalle.idStock, detalle.Cantidad_Usada);
+
             _context.DetalleReparacion.Remove(detalle);
             await _context.SaveChangesAsync();
         }
+    }
+
+    private async Task AjustarStockAsync(int idStock, int cantidad)
+    {
+        var stock = await _context.Stock.FindAsync(idStock);
+        if (stock is not null)
+            stock.Cantidad_Stock += cantidad;
     }
 }
